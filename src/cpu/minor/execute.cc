@@ -64,6 +64,7 @@
 #include "debug/BranchsREGfaultInjectionTrack.hh"
 #include "debug/CMPsREGfaultInjectionTrack.hh"
 #include "debug/UnnecInst.hh"
+#include "debug/LSQaccesses.hh"
 #include "string.h"
 #include "stdio.h"
 #include <sstream>

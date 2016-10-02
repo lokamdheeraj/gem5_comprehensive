@@ -39,7 +39,7 @@
 
 #include <iomanip>
 #include <sstream>
-
+#include <stdlib.h>
 #include "arch/locked_mem.hh"
 #include "arch/mmapped_ipr.hh"
 #include "cpu/minor/cpu.hh"
@@ -1511,15 +1511,26 @@ LSQ::pushRequest(MinorDynInstPtr inst, bool isLoad, uint8_t *data,
 			debugSymbolTable->findNearestSymbol(inst->pc.instAddr() , funcName, sym_addr);
 			if (funcName == "main" || ((funcName[0] == 'F' && funcName[1] == 'U' && funcName[2] == 'N' && funcName[3] == 'C')))
 {
-DPRINTF(LSQaccesses, "FUNC= %s: Inst:%s: SeqNum:%s\n",funcName,inst->staticInst->disassemble(0),inst->id.execSeqNum);
+
+
+int temp_data[size];
+for(int i=0; i<size; i++){
+    temp_data[(size-1)-i]=*(data+i);
+}
+int index=0;
+char data_str[128];
+for(int i=0; i<size; i++)
+index += sprintf(&data_str[index], "%02x", temp_data[i]);
+    DPRINTF(LSQaccesses, "Pushing request (%s) addr: 0x%x size: %d flags:"
+        " 0x%x%s lineWidth : 0x%x\n",
+        (isLoad ? "load" : "store"), addr, size, flags,
+            (needs_burst ? " (needs burst)" : ""), lineWidth);
+    DPRINTF(LSQaccesses, "Data: 0x%s : %ld\n", data_str, strtol(data_str,NULL,16));
+//DPRINTF(LSQaccesses, "FUNC= %s: Inst:%s: SeqNum:%s\n",funcName,inst->staticInst->disassemble(0),inst->id.execSeqNum);
 //DPRINTF(Dheeraj, ANSI_COLOR_YELLOW "####In LSQ  %f Slots####" ANSI_COLOR_RESET "\n",(float)numValidEntriesInLSQ()/(float)numTotalEntriesInLSQ());
 
 }
     
-
-
-
-
 ////////
 
 ////working area for fault injection on LSQ
@@ -1544,7 +1555,54 @@ if (execute.FIcomparray[execute.i] == 2) { execute.pipelineRegisters=false; exec
 if (execute.FIcomparray[execute.i] == 3) { execute.pipelineRegisters=true; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i];execute.FItarget=execute.FItarArr[execute.i]; }
 if (execute.FIcomparray[execute.i] == 4) { execute.pipelineRegisters=false; execute.FUsFI=true; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i];execute.FItarget=execute.FItarArr[execute.i]; }
 
-bool Size=false;
+if ( execute.FItargetReg == 1 ) // Injecting Fault on Address
+{
+	int faultyBit = execute.FItargetBit;
+	int temp = pow (2, faultyBit);
+	DPRINTF(LSQtrack, "----LSQ FI--FAULT ID=%d----@ clk tick=%s with Seq Num=%s\n", execute.i,curTick(),inst->id.execSeqNum);
+	DPRINTF(LSQtrack, "Func:%s, Target instruction in LSQ is:%s, TRUE ADDRESS is 0x%s and FAULTY ADDRESS is 0x%s\n",funcName, inst->staticInst->disassemble(0), addr, (addr xor  temp) );
+	addr = addr xor temp;		
+}
+
+else if (execute.FItargetReg == 2 ) // Injecting Fault on Data
+{
+	int faultyBit = execute.FItargetBit;
+	int packet_num = (faultyBit-1) / 8;
+	int fbit_in_packet = faultyBit - (packet_num * 8);
+		int temp_data[size];
+		for(int i=0; i<size; i++)
+    		temp_data[(size-1)-i]=*(data+i);
+		int index=0;
+		char data_str[128];
+		for(int i=0; i<size; i++)
+		index += sprintf(&data_str[index], "%02x", temp_data[i]);
+	long int data_dec = strtol(data_str,NULL,16);
+	*(data + packet_num) ^= 1 << fbit_in_packet;    // Injecting fault into the data bit given by FItargetBit
+		for(int i=0; i<size; i++)
+    		temp_data[(size-1)-i]=*(data+i);
+		index=0;
+		for(int i=0; i<size; i++)
+		index += sprintf(&data_str[index], "%02x", temp_data[i]);
+	long int fault_data_dec = strtol(data_str,NULL,16);  
+	
+	request_data = new uint8_t[size];
+        std::memcpy(request_data, data, size);
+	DPRINTF(LSQtrack, "----LSQ FI--FAULT ID=%d----@ clk tick=%s with Seq Num=%s \n", execute.i,curTick(),inst->id.execSeqNum);
+	DPRINTF(LSQtrack, "Func:%s, Target instruction is: %s, soft error happens on %dth bit of data. TRUE Data = %ld , FAULTY Data = %ld \n",funcName, inst->staticInst->disassemble(0), faultyBit, data_dec, fault_data_dec);
+	storeIsDone=true;
+			
+	
+}
+
+else if ( execute.FItargetReg == 3 ) // Injecting Fault on Flags
+{
+	int faultyBit = execute.FItargetBit;
+	int temp = pow (2, faultyBit);
+	DPRINTF(LSQtrack, "----LSQ FI--FAULT ID=%d----@ clk tick=%s with Seq Num=%s\n", execute.i,curTick(),inst->id.execSeqNum);
+	DPRINTF(LSQtrack, "Func:%s, Target instruction is:%s, TRUE Flag bits are 0x%s and FAULTY flag bits are 0x%s\n",funcName, inst->staticInst->disassemble(0), flags, (flags xor  temp) );
+	flags = flags xor temp;		
+}
+/*bool Size=false;
 srand (time(0));
 int temp = execute.FItargetReg;
 //int temp = rand()%(6);
@@ -1582,7 +1640,7 @@ std::memset(request_data, faultyBit, size);
 DPRINTF(LSQtrack, ANSI_COLOR_BLUE "----LSQ FI--FAULT ID=%d----@ clk tick=%s with Seq Num=%s" ANSI_COLOR_RESET "\n", execute.i,curTick(),inst->id.execSeqNum);
 DPRINTF(LSQtrack, "Func:%s, Target instruction is Store:%s, soft error happens on data\n",funcName, inst->staticInst->disassemble(0));
 storeIsDone=true;
-}
+}*/
 }
 }
 }
