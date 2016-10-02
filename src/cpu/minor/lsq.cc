@@ -1560,7 +1560,7 @@ if ( execute.FItargetReg == 1 ) // Injecting Fault on Address
 	int faultyBit = execute.FItargetBit;
 	int temp = pow (2, faultyBit);
 	DPRINTF(LSQtrack, "----LSQ FI--FAULT ID=%d----@ clk tick=%s with Seq Num=%s\n", execute.i,curTick(),inst->id.execSeqNum);
-	DPRINTF(LSQtrack, "Func:%s, Target instruction in LSQ is:%s, TRUE ADDRESS is 0x%s and FAULTY ADDRESS is 0x%s\n",funcName, inst->staticInst->disassemble(0), addr, (addr xor  temp) );
+	DPRINTF(LSQtrack, "Func:%s, Target instruction in LSQ is:%s, TRUE ADDRESS is 0x%x and FAULTY ADDRESS is 0x%x\n",funcName, inst->staticInst->disassemble(0), addr, (addr xor  temp) );
 	addr = addr xor temp;		
 }
 
