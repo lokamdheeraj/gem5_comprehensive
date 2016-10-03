@@ -235,11 +235,12 @@ for i in xrange(np):
         system.cpu[i].addCheckerCpu()
     system.cpu[i].FItarget  = options.FItarget #moselme ///Fault injection
     system.cpu[i].FItargetReg = options.FItargetReg #moselme ///Fault injection
+    system.cpu[i].FItargetBit   = options.FItargetBit #dheeraj
     system.cpu[i].MaxTick =options.MaxTick #moselme ///Fault injection
 
     system.cpu[i].FItargets     = options.FItargets #dheeraj ///Fault injection
     system.cpu[i].FItargetRegs  = options.FItargetRegs #dheeraj ///Fault injection
-    system.cpu[i].FItargetBit   = options.FItargetBit #dheeraj
+    system.cpu[i].FItargetBits   = options.FItargetBits #dheeraj
     system.cpu[i].FISequence  = options.FISequence #dheeraj ///Fault injection
     system.cpu[i].FIMaxTarget = options.FIMaxTarget #dheeraj ///Fault injection
 

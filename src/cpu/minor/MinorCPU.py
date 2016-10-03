@@ -256,11 +256,12 @@ class MinorCPU(BaseCPU):
 ########################################3
     FItarget = Param.UInt64(0, "The target instruction/tick for fault injection")
     FItargetReg = Param.UInt64(0, "The target register for fault injection")
+    FItargetBit = Param.UInt64(0, "The target bit for fault injection")
     FIMaxTarget = Param.UInt64(0, "The clock ticks for given benchmark")
 ## Added by Dheeraj Lokam for Versatile FI
     FItargets = Param.String('', "Comma Seperated list of FI Targets")
     FItargetRegs = Param.String('', "Comma Seperated list of FI Target Registers")
-    FItargetBit = Param.UInt64(0, "Target Bit to be flipped")
+    FItargetBits = Param.String('', "Target Bit to be flipped")
     FISequence = Param.String('', "Comma Seperated list of FI Component Sequence")
     MaxTick = Param.UInt64(0, "The maximum allowable tick, used for fault injection")
     enableSWIFTR = Param.Bool(False, "SWIFTR is enable")

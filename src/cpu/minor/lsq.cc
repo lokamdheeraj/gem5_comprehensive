@@ -1540,20 +1540,15 @@ if ((execute.FIcomparray[execute.i] == 2))
 {
 	//execute.FItargetReg=225;
 	execute.LSQFI=true;
+    execute.FItargetBit=execute.FIBitArr[execute.i];
 	//execute.FItarget=execute.FIseqnum;
-	execute.FItargetReg=execute.FIRegArr[execute.i];
+	//execute.FItargetReg=execute.FIRegArr[execute.i];
 if ((funcName == "main" || ((funcName[0] == 'F' && funcName[1] == 'U' && funcName[2] == 'N' && funcName[3] == 'C'))) )
 {
 
 //if (!(execute.faultIsInjected[execute.i]) && (inst->id.execSeqNum  >= execute.FItarget)  && execute.LSQFI) 
 if (!(execute.faultIsInjected[execute.i]) && (curTick() >= execute.FItarget)  && execute.LSQFI) 
 {
-execute.faultIsInjected[execute.i]=true;
-execute.i = execute.i + 1;
-if (execute.FIcomparray[execute.i] == 1) { execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=100; execute.FItarget=execute.FItarArr[execute.i]; }
-if (execute.FIcomparray[execute.i] == 2) { execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=true; execute.FItargetReg=execute.FIRegArr[execute.i]; execute.FItarget=execute.FItarArr[execute.i]; }
-if (execute.FIcomparray[execute.i] == 3) { execute.pipelineRegisters=true; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i];execute.FItarget=execute.FItarArr[execute.i]; }
-if (execute.FIcomparray[execute.i] == 4) { execute.pipelineRegisters=false; execute.FUsFI=true; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i];execute.FItarget=execute.FItarArr[execute.i]; }
 
 if ( execute.FItargetReg == 1 ) // Injecting Fault on Address
 {
@@ -1602,6 +1597,12 @@ else if ( execute.FItargetReg == 3 ) // Injecting Fault on Flags
 	DPRINTF(LSQtrack, "Func:%s, Target instruction is:%s, TRUE Flag bits are 0x%s and FAULTY flag bits are 0x%s\n",funcName, inst->staticInst->disassemble(0), flags, (flags xor  temp) );
 	flags = flags xor temp;		
 }
+execute.faultIsInjected[execute.i]=true;
+execute.i = execute.i + 1;
+if (execute.FIcomparray[execute.i] == 1) { execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=100; execute.FItarget=execute.FItarArr[execute.i]; }
+if (execute.FIcomparray[execute.i] == 2) { execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=true; execute.FItargetReg=execute.FIRegArr[execute.i]; execute.FItarget=execute.FItarArr[execute.i]; execute.FItargetBit=execute.FIBitArr[execute.i]; }
+if (execute.FIcomparray[execute.i] == 3) { execute.pipelineRegisters=true; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i];execute.FItarget=execute.FItarArr[execute.i]; }
+if (execute.FIcomparray[execute.i] == 4) { execute.pipelineRegisters=false; execute.FUsFI=true; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i];execute.FItarget=execute.FItarArr[execute.i]; }
 /*bool Size=false;
 srand (time(0));
 int temp = execute.FItargetReg;

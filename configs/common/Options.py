@@ -84,6 +84,8 @@ def addCommonOptions(parser):
                 help = "The execution sequence number of the instruction or tick, that we want to inject fault on that")
     parser.add_option("--FItargetReg", type="long", default="0",
                 help = "The source register of the instruction that we want to inject fault on that")
+    parser.add_option("--FItargetBit", type="long", default="0",
+                help = "FI Target Bit to flip")
     parser.add_option("--MaxTick", type="long", default="0",
                 help = "Maximum tick, this is used for fault injection")
     parser.add_option("--FIMaxTarget", type="long", default="0",
@@ -93,8 +95,8 @@ def addCommonOptions(parser):
                 help = "Comma Seperated list of FI clk ticks")
     parser.add_option("--FItargetRegs", type="string", default="0",
                 help = "Comma Seperated list of FI Target Registers")
-    parser.add_option("--FItargetBit", type="long", default="0",
-                help = "Bit to flip")
+    parser.add_option("--FItargetBits", type="string", default="0",
+                help = "Comma Seperated list of FI Target Bits to flip")
     parser.add_option("--FISequence", type="string", default="0",
                 help = "Comma Seperated list of components to be subjected to Fault Injections")
     # Memory Options

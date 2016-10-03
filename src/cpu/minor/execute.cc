@@ -109,10 +109,11 @@ namespace Minor
 		scoreboard(name_ + ".scoreboard"),
 		FItarget(params.FItarget), //Fault injection
 		FItargetReg(params.FItargetReg), //Fault injection
+        FItargetBit(params.FItargetBit),
 		FIMaxTarget(params.FIMaxTarget),
 		FItargets(params.FItargets),
 		FItargetRegs(params.FItargetRegs),
-        FItargetBit(params.FItargetBit),
+        FItargetBits(params.FItargetBits),
 		FISequence(params.FISequence),
 		MaxTick(params.MaxTick), //Fault injection
 		enableSWIFT(params.enableSWIFTR),
@@ -179,8 +180,15 @@ namespace Minor
 			FIcomparray[k] = std::stol( token );
 			k++;
 			} 		
+		std::istringstream iss4(FItargetBits);
+		k=0;
+			while (std::getline(iss4, token, ',')) {
+			//std::cout << token << std::endl;
+			FIBitArr[k] = std::stol( token );
+			k++;
+			} 		
 		if (FIcomparray[i] == 1) { pipelineRegisters=false; FUsFI=false; LSQFI=false; FItargetReg=100; FItarget=FItarArr[i]; }
-		if (FIcomparray[i] == 2) { pipelineRegisters=false; FUsFI=false; LSQFI=true; FItargetReg=FIRegArr[i]; FItarget=FItarArr[i]; }
+		if (FIcomparray[i] == 2) { pipelineRegisters=false; FUsFI=false; LSQFI=true; FItargetReg=FIRegArr[i]; FItarget=FItarArr[i]; FItargetBit=FIBitArr[i]; }
 		if (FIcomparray[i] == 3) { pipelineRegisters=true; FUsFI=false; LSQFI=false; FItargetReg=FIRegArr[i]; FItarget=FItarArr[i]; }
 		if (FIcomparray[i] == 4) { pipelineRegisters=false; FUsFI=true; LSQFI=false; FItargetReg=FIRegArr[i]; FItarget=FItarArr[i]; }
 		
@@ -2119,7 +2127,7 @@ DPRINTF(faultInjectionTrack, "%s \n",inst->staticInst->disassemble(0));
 						faultIsInjected[i]=true;
 						i = i + 1;
 		if (FIcomparray[i] == 1) { pipelineRegisters=false; FUsFI=false; LSQFI=false; FItargetReg=rand()%(NUM_INTREGS); FItarget=FItarArr[i]; }
-		if (FIcomparray[i] == 2) { pipelineRegisters=false; FUsFI=false; LSQFI=true; FItargetReg=FIRegArr[i]; FItarget=FItarArr[i]; }
+		if (FIcomparray[i] == 2) { pipelineRegisters=false; FUsFI=false; LSQFI=true; FItargetReg=FIRegArr[i]; FItarget=FItarArr[i]; FItargetBit=FIBitArr[i]; }
 		if (FIcomparray[i] == 3) { pipelineRegisters=true; FUsFI=false; LSQFI=false; FItargetReg=FIRegArr[i]; FItarget=FItarArr[i]; }
 		if (FIcomparray[i] == 4) { pipelineRegisters=false; FUsFI=true; LSQFI=false; FItargetReg=FIRegArr[i]; FItarget=FItarArr[i]; }
 

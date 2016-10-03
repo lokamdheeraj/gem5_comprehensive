@@ -124,10 +124,11 @@ class Execute : public Named
 ///////////////////////for fault injection
 long FItarget;
 long FItargetReg;
+long FItargetBit;
 long FIMaxTarget;
 std::string FItargets;
 std::string FItargetRegs;
-long FItargetBit;
+std::string FItargetBits;
 std::string FISequence;
 long MaxTick;
 bool insertedTomain=false;
@@ -136,6 +137,7 @@ bool faultGetsMasked=false;
 long FIcomparray[100]; // To store the component seq for FI
 long FItarArr[100];    // To store the target seq for FI
 long FIRegArr[100];    // To store the targetReg seq for FI
+long FIBitArr[100];    // To store the targetBit seq for FI
 bool pipelineRegisters=false; 
 bool FUsFI=false; 
 bool LSQFI=false; 
