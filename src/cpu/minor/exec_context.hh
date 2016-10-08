@@ -204,7 +204,7 @@ if (execute.FIcomparray[execute.i] == 1) { execute.pipelineRegisters=false; exec
 if (execute.FIcomparray[execute.i] == 2) { execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=true; execute.FItargetReg=execute.FIRegArr[execute.i]; execute.FItarget=execute.FItarArr[execute.i]; }
 if (execute.FIcomparray[execute.i] == 3) { execute.pipelineRegisters=true; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i];execute.FItarget=execute.FItarArr[execute.i]; }
 if (execute.FIcomparray[execute.i] == 4) { execute.pipelineRegisters=false; execute.FUsFI=true; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i];execute.FItarget=execute.FItarArr[execute.i]; }
-						DPRINTF(FUsREGfaultInjectionTrack, "%s: " ANSI_COLOR_GREEN "TRUE FU's VALUE" ANSI_COLOR_RESET " was: %s due to the faults in FU's registers the " ANSI_COLOR_RED "FAULTY FU's VALUE " ANSI_COLOR_RESET " is %s\n", inst->staticInst->disassemble(0), thread.readIntReg(si->srcRegIdx(idx)), faultyval);
+						DPRINTF(FUsREGfaultInjectionTrack, "%s: TRUE FU's VALUE was: %s due to the faults in FU's registers the FAULTY FU's VALUE is %s\n", inst->staticInst->disassemble(0), thread.readIntReg(si->srcRegIdx(idx)), faultyval);
 						return faultyval;
 
 						}
