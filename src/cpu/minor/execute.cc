@@ -189,7 +189,7 @@ namespace Minor
 			} 		
 		if (FIcomparray[i] == 1) { pipelineRegisters=false; FUsFI=false; LSQFI=false; FItargetReg=100; FItarget=FItarArr[i]; }
 		if (FIcomparray[i] == 2) { pipelineRegisters=false; FUsFI=false; LSQFI=true; FItargetReg=FIRegArr[i]; FItarget=FItarArr[i]; FItargetBit=FIBitArr[i]; }
-		if (FIcomparray[i] == 3) { pipelineRegisters=true; FUsFI=false; LSQFI=false; FItargetReg=FIRegArr[i]; FItarget=FItarArr[i]; }
+		if (FIcomparray[i] == 3) { pipelineRegisters=true; FUsFI=false; LSQFI=false; FItargetReg=FIRegArr[i]; FItarget=FItarArr[i]; FItargetBit=FIBitArr[i]; }
 		if (FIcomparray[i] == 4) { pipelineRegisters=false; FUsFI=true; LSQFI=false; FItargetReg=FIRegArr[i]; FItarget=FItarArr[i]; }
 		
 

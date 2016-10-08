@@ -159,25 +159,15 @@ namespace Minor
 					//else if ((execute.FIcomparray[execute.i] == 3) && (!execute.faultIsInjected[execute.i]) && execute.FItarget == execute.headOfInFlightInst &&  execute.FItargetReg == si->srcRegIdx(idx) && execute.pipelineRegisters)
 					else if ((execute.FIcomparray[execute.i] == 3) && (!execute.faultIsInjected[execute.i]) && (execute.FItarget == curTick()) && execute.pipelineRegisters)
 					{
-						float probability = ( (float)execute.inputBuffer.getSizeBuffer()/(float)7 ); //likeliness of fault happening on valid inst
-						int randvar=rand()%100; //Generates a random number from 0-100 over uniform dist. 
-						float result=(float)randvar/(float)100;
-						if (result > probability) {
-						DPRINTF(RegPointerFI, ANSI_COLOR_YELLOW "####In Pipeline, Fault Prob. on valid inst was %d/%d. Skipping FI####" ANSI_COLOR_RESET "\n", execute.inputBuffer.getSizeBuffer(),7);
-						srand (curTick()+time(0));
-						execute.faultIsInjected[execute.i]=true;
-						execute.i = execute.i + 1;
-if (execute.FIcomparray[execute.i] == 1) { execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=100; execute.FItarget=execute.FItarArr[execute.i]; }
-if (execute.FIcomparray[execute.i] == 2) { execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=true; execute.FItargetReg=execute.FIRegArr[execute.i]; execute.FItarget=execute.FItarArr[execute.i]; }
-if (execute.FIcomparray[execute.i] == 3) { execute.pipelineRegisters=true; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i];execute.FItarget=execute.FItarArr[execute.i]; }
-if (execute.FIcomparray[execute.i] == 4) { execute.pipelineRegisters=false; execute.FUsFI=true; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i];execute.FItarget=execute.FItarArr[execute.i]; }
-						return thread.readIntReg(si->srcRegIdx(idx)); //Returning true value
-					        }	
-						else
-						{	
-						srand (time(0));
-						int faultyIDX = rand()%(34); 
-						if(faultyIDX == 33) faultyIDX = NUM_INTREGS;
+						execute.FItargetBit=execute.FIBitArr[execute.i];
+						execute.FItargetReg=execute.FIRegArr[execute.i];
+						int temp = pow (2, execute.FItargetBit); 
+						
+						int orgIDX = static_cast<unsigned int>(si->srcRegIdx(idx));
+						if ( orgIDX == execute.FItargetReg )
+						{
+						int faultyIDX = temp xor orgIDX; 
+						//if(faultyIDX == 33) faultyIDX = NUM_INTREGS;
 						DPRINTF(RegPointerFI, ANSI_COLOR_BLUE "----PIPELINE FI--FAULT ID=%d----@ clk tick=%s with Seq Num=%s" ANSI_COLOR_RESET "\n", execute.i,curTick(),inst->id.execSeqNum);
 						//srand (time(0));
 						//randBit = rand()%62;
@@ -191,9 +181,11 @@ if (execute.FIcomparray[execute.i] == 4) { execute.pipelineRegisters=false; exec
 
 				DPRINTF(RegPointerFI, "%s, points to I: %s\nBecause of faults in pipeline registers now it points to %s\n", inst->staticInst->disassemble(0), static_cast<unsigned int>(si->srcRegIdx(idx)), static_cast<unsigned int>(faultyIDX));
 						return thread.readIntReg(faultyIDX);
-
 						}
-					}
+						else 
+						return thread.readIntReg(orgIDX);
+					}	
+					
 					// FUs fault injection for ADDress calculation of memory operands
 					//else if ((execute.FIcomparray[execute.i] == 4) && (!execute.faultIsInjected[execute.i]) && ( execute.FItarget == execute.headOfInFlightInst || execute.FItarget == inst->id.execSeqNum)   && execute.FUsFI )
 					else if ((execute.FIcomparray[execute.i] == 4) && (!execute.faultIsInjected[execute.i]) && ( execute.FItarget == curTick())   && execute.FUsFI )
@@ -447,26 +439,13 @@ return faultyval;
 								// registers pointer in pipeline
 								//else if ((execute.FIcomparray[execute.i] == 3) && (!execute.faultIsInjected[execute.i]) && execute.FItarget == execute.headOfInFlightInst &&  execute.FItargetReg == si->destRegIdx(idx) && execute.pipelineRegisters)
 					else if ((execute.FIcomparray[execute.i] == 3) && (!execute.faultIsInjected[execute.i]) && (execute.FItarget == curTick()) &&  execute.pipelineRegisters)
-					{
-						float probability = ( (float)execute.inputBuffer.getSizeBuffer()/(float)7 ); //likeliness of fault happening on valid inst
-						int randvar=rand()%100; //Generates a random number from 0-100 over uniform dist. 
-						float result=(float)randvar/(float)100;
-						if (result > probability) {
-						DPRINTF(RegPointerFI, ANSI_COLOR_YELLOW "####In Pipeline, Fault Prob. on valid inst was %d/%d. Skipping FI####" ANSI_COLOR_RESET "\n", execute.inputBuffer.getSizeBuffer(),7);
-						srand (curTick()+time(0));
-						execute.faultIsInjected[execute.i]=true;
-						execute.i = execute.i + 1;
-if (execute.FIcomparray[execute.i] == 1) { execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=100; execute.FItarget=execute.FItarArr[execute.i]; }
-if (execute.FIcomparray[execute.i] == 2) { execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=true; execute.FItargetReg=execute.FIRegArr[execute.i]; execute.FItarget=execute.FItarArr[execute.i]; }
-if (execute.FIcomparray[execute.i] == 3) { execute.pipelineRegisters=true; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i];execute.FItarget=execute.FItarArr[execute.i]; }
-if (execute.FIcomparray[execute.i] == 4) { execute.pipelineRegisters=false; execute.FUsFI=true; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i];execute.FItarget=execute.FItarArr[execute.i]; }
-								thread.setIntReg(si->destRegIdx(idx), val);
-						}
-						else
-						{
-									srand (time(0));
-									int faultyIDX = rand()%(34); 
-									if(faultyIDX == 33) faultyIDX = NUM_INTREGS;
+					{				execute.FItargetReg=execute.FIRegArr[execute.i];
+									execute.FItargetBit=execute.FIBitArr[execute.i];
+									int orgIDX = static_cast<unsigned int>(si->destRegIdx(idx));
+									if (execute.FItargetReg == orgIDX)
+									{
+									int temp = pow (2, execute.FItargetBit);
+									int faultyIDX = temp xor orgIDX;
 									//randBit = rand()%62;
 									//temp = pow (2, randBit);
 				DPRINTF(RegPointerFI, ANSI_COLOR_BLUE "----PIPELINE FI--FAULT ID=%d----@ clk tick=%s with Seq Num=%s" ANSI_COLOR_RESET "\n", execute.i,curTick(),inst->id.execSeqNum);
@@ -479,8 +458,14 @@ if (execute.FIcomparray[execute.i] == 4) { execute.pipelineRegisters=false; exec
 									DPRINTF(RegPointerFI, "%s: Idx(%s), points to I: %s\nBecause of faults in pipeline registers now it points to %s\n", inst->staticInst->disassemble(0), idx, static_cast<unsigned int>(si->destRegIdx(idx)), static_cast<unsigned int>(faultyIDX));
 									thread.setIntReg(faultyIDX, val);
 									return;
+									}
+									else 
+									{
+									thread.setIntReg(orgIDX, val);
+									return;
+									}
 
-						}
+						
 					}
 								//else if ((execute.FIcomparray[execute.i] == 4) && (!execute.faultIsInjected[execute.i]) && execute.FItarget == execute.headOfInFlightInst &&  execute.FItargetReg == si->destRegIdx(idx) && execute.FUsFI && false)
 								else if ((execute.FIcomparray[execute.i] == 4) && (!execute.faultIsInjected[execute.i]) && execute.FItarget == curTick() && execute.FUsFI && false)
