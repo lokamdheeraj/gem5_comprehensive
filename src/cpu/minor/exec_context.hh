@@ -174,11 +174,11 @@ namespace Minor
 						//temp = pow (2, randBit);
 						execute.faultIsInjected[execute.i]=true;
 						execute.i = execute.i + 1;
-if (execute.FIcomparray[execute.i] == 1) { execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=100; execute.FItarget=execute.FItarArr[execute.i]; }
-if (execute.FIcomparray[execute.i] == 2) { execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=true; execute.FItargetReg=execute.FIRegArr[execute.i]; execute.FItarget=execute.FItarArr[execute.i]; }
-if (execute.FIcomparray[execute.i] == 3) { execute.pipelineRegisters=true; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i];execute.FItarget=execute.FItarArr[execute.i]; }
-if (execute.FIcomparray[execute.i] == 4) { execute.pipelineRegisters=false; execute.FUsFI=true; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i];execute.FItarget=execute.FItarArr[execute.i]; }
-
+if (execute.FIcomparray[execute.i] == 1) { execute.CMPsFI=false; execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=100; execute.FItarget=execute.FItarArr[execute.i]; }
+if (execute.FIcomparray[execute.i] == 2) { execute.CMPsFI=false; execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=true;  execute.FItargetReg=execute.FIRegArr[execute.i]; execute.FItarget=execute.FItarArr[execute.i]; }
+if (execute.FIcomparray[execute.i] == 3) { execute.CMPsFI=false; execute.pipelineRegisters=true;  execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i];execute.FItarget=execute.FItarArr[execute.i]; }
+if (execute.FIcomparray[execute.i] == 4) { execute.CMPsFI=false; execute.pipelineRegisters=false; execute.FUsFI=true;  execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i];execute.FItarget=execute.FItarArr[execute.i]; }
+if (execute.FIcomparray[execute.i] == 5) { execute.CMPsFI=true;  execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i]; execute.FItarget=execute.FItarArr[execute.i]; }
 				DPRINTF(RegPointerFI, "%s, points to I: %s\nBecause of faults in pipeline registers now it points to %s\n", inst->staticInst->disassemble(0), static_cast<unsigned int>(si->srcRegIdx(idx)), static_cast<unsigned int>(faultyIDX));
 						return thread.readIntReg(faultyIDX);
 						}
@@ -200,10 +200,11 @@ if (execute.FIcomparray[execute.i] == 4) { execute.pipelineRegisters=false; exec
 DPRINTF(FUsREGfaultInjectionTrack, ANSI_COLOR_BLUE "----FU FI--FAULT ID=%d----@ clk tick=%s with Seq Num=%s" ANSI_COLOR_RESET "\n", execute.i,curTick(),inst->id.execSeqNum);
 						execute.faultIsInjected[execute.i]=true;
 						execute.i = execute.i + 1;
-if (execute.FIcomparray[execute.i] == 1) { execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=100; execute.FItarget=execute.FItarArr[execute.i]; }
-if (execute.FIcomparray[execute.i] == 2) { execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=true; execute.FItargetReg=execute.FIRegArr[execute.i]; execute.FItarget=execute.FItarArr[execute.i]; }
-if (execute.FIcomparray[execute.i] == 3) { execute.pipelineRegisters=true; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i];execute.FItarget=execute.FItarArr[execute.i]; }
-if (execute.FIcomparray[execute.i] == 4) { execute.pipelineRegisters=false; execute.FUsFI=true; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i];execute.FItarget=execute.FItarArr[execute.i]; }
+if (execute.FIcomparray[execute.i] == 1) { execute.CMPsFI=false; execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=100; execute.FItarget=execute.FItarArr[execute.i]; }
+if (execute.FIcomparray[execute.i] == 2) { execute.CMPsFI=false; execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=true; execute.FItargetReg=execute.FIRegArr[execute.i]; execute.FItarget=execute.FItarArr[execute.i]; }
+if (execute.FIcomparray[execute.i] == 3) { execute.CMPsFI=false; execute.pipelineRegisters=true; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i];execute.FItarget=execute.FItarArr[execute.i]; }
+if (execute.FIcomparray[execute.i] == 4) { execute.CMPsFI=false; execute.pipelineRegisters=false; execute.FUsFI=true; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i];execute.FItarget=execute.FItarArr[execute.i]; }
+if (execute.FIcomparray[execute.i] == 5) { execute.CMPsFI=true;  execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i]; execute.FItarget=execute.FItarArr[execute.i]; }
 						DPRINTF(FUsREGfaultInjectionTrack, "%s: TRUE FU's VALUE was: %s due to the faults in FU's registers the FAULTY FU's VALUE is %s\n", inst->staticInst->disassemble(0), thread.readIntReg(si->srcRegIdx(idx)), faultyval);
 						return faultyval;
 
@@ -224,14 +225,22 @@ if (execute.FIcomparray[execute.i] == 4) { execute.pipelineRegisters=false; exec
 						DPRINTF(BranchsREGfaultInjectionTrack, "%s: true Branch register val was: %s\nBecause of fault now the value is %s\n", inst->staticInst->disassemble(0), thread.readIntReg(si->srcRegIdx(idx)), faultyval);
 								thread.setIntReg(si->srcRegIdx(idx), faultyval);
 					}
-				else if (!execute.faultIsInjected[execute.i] && (execute.FItarget == execute.headOfInFlightInst ) /*&&  execute.FItargetReg == si->srcRegIdx(idx)*/ && execute.CMPsFI && !si->isLoad() && !si->isStore() )
-					{
-						srand (time(0));
-						int faultyBIT = rand()%(32); 
-						int temp = pow (2, faultyBIT);
-						execute.faultIsInjected[execute.i]=true;
-						int faultyval = thread.readIntReg(si->srcRegIdx(idx)) xor temp; 
 
+					//fault injection on CMP instructions -Dheeraj
+				else if ((execute.FIcomparray[execute.i] == 5) && (!execute.faultIsInjected[execute.i]) && (execute.FItarget == execute.headOfInFlightInst) /*&&  execute.FItargetReg == si->srcRegIdx(idx)*/ && execute.CMPsFI && !si->isLoad() && !si->isStore() )
+					{
+						execute.FItargetBit=execute.FIBitArr[execute.i];
+						
+						int faultyBIT = execute.FItargetBit; 
+						int temp = pow (2, faultyBIT);
+						int faultyval = thread.readIntReg(si->srcRegIdx(idx)) xor temp; 
+						execute.faultIsInjected[execute.i]=true;
+						execute.i = execute.i + 1;
+if (execute.FIcomparray[execute.i] == 1) { execute.CMPsFI=false; execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=100; execute.FItarget=execute.FItarArr[execute.i]; }
+if (execute.FIcomparray[execute.i] == 2) { execute.CMPsFI=false; execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=true; execute.FItargetReg=execute.FIRegArr[execute.i]; execute.FItarget=execute.FItarArr[execute.i]; }
+if (execute.FIcomparray[execute.i] == 3) { execute.CMPsFI=false; execute.pipelineRegisters=true; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i];execute.FItarget=execute.FItarArr[execute.i]; }
+if (execute.FIcomparray[execute.i] == 4) { execute.CMPsFI=false; execute.pipelineRegisters=false; execute.FUsFI=true; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i];execute.FItarget=execute.FItarArr[execute.i]; }
+if (execute.FIcomparray[execute.i] == 5) { execute.CMPsFI=true;  execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i]; execute.FItarget=execute.FItarArr[execute.i]; }
 						DPRINTF(CMPsREGfaultInjectionTrack, "%s: true CMP register val was: %s\nBecause of fault now the value is %s\n", inst->staticInst->disassemble(0), thread.readIntReg(si->srcRegIdx(idx)), faultyval);
 								return faultyval;
 					}
@@ -263,10 +272,11 @@ if (execute.FIcomparray[execute.i] == 4) { execute.pipelineRegisters=false; exec
 								srand (curTick()+time(0));
 								execute.faultIsInjected[execute.i]=true;
 								execute.i = execute.i + 1;
-if (execute.FIcomparray[execute.i] == 1) { execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=100; execute.FItarget=execute.FItarArr[execute.i]; }
-if (execute.FIcomparray[execute.i] == 2) { execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=true; execute.FItargetReg=execute.FIRegArr[execute.i]; execute.FItarget=execute.FItarArr[execute.i]; }
-if (execute.FIcomparray[execute.i] == 3) { execute.pipelineRegisters=true; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i];execute.FItarget=execute.FItarArr[execute.i]; }
-if (execute.FIcomparray[execute.i] == 4) { execute.pipelineRegisters=false; execute.FUsFI=true; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i];execute.FItarget=execute.FItarArr[execute.i]; }
+if (execute.FIcomparray[execute.i] == 1) { execute.CMPsFI=false; execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=100; execute.FItarget=execute.FItarArr[execute.i]; }
+if (execute.FIcomparray[execute.i] == 2) { execute.CMPsFI=false; execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=true; execute.FItargetReg=execute.FIRegArr[execute.i]; execute.FItarget=execute.FItarArr[execute.i]; }
+if (execute.FIcomparray[execute.i] == 3) { execute.CMPsFI=false; execute.pipelineRegisters=true; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i];execute.FItarget=execute.FItarArr[execute.i]; }
+if (execute.FIcomparray[execute.i] == 4) { execute.CMPsFI=false; execute.pipelineRegisters=false; execute.FUsFI=true; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i];execute.FItarget=execute.FItarArr[execute.i]; }
+if (execute.FIcomparray[execute.i] == 5) { execute.CMPsFI=true;  execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i]; execute.FItarget=execute.FItarArr[execute.i]; }
 								return thread.readFloatReg(reg_idx);
 								}
 								else
@@ -279,10 +289,11 @@ if (execute.FIcomparray[execute.i] == 4) { execute.pipelineRegisters=false; exec
 									//temp = pow (2, randBit);
 									execute.faultIsInjected[execute.i]=true;
 									execute.i = execute.i + 1;
-if (execute.FIcomparray[execute.i] == 1) { execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=100; execute.FItarget=execute.FItarArr[execute.i]; }
-if (execute.FIcomparray[execute.i] == 2) { execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=true; execute.FItargetReg=execute.FIRegArr[execute.i]; execute.FItarget=execute.FItarArr[execute.i]; }
-if (execute.FIcomparray[execute.i] == 3) { execute.pipelineRegisters=true; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i];execute.FItarget=execute.FItarArr[execute.i]; }
-if (execute.FIcomparray[execute.i] == 4) { execute.pipelineRegisters=false; execute.FUsFI=true; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i];execute.FItarget=execute.FItarArr[execute.i]; }
+if (execute.FIcomparray[execute.i] == 1) { execute.CMPsFI=false; execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=100; execute.FItarget=execute.FItarArr[execute.i]; }
+if (execute.FIcomparray[execute.i] == 2) { execute.CMPsFI=false; execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=true; execute.FItargetReg=execute.FIRegArr[execute.i]; execute.FItarget=execute.FItarArr[execute.i]; }
+if (execute.FIcomparray[execute.i] == 3) { execute.CMPsFI=false; execute.pipelineRegisters=true; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i];execute.FItarget=execute.FItarArr[execute.i]; }
+if (execute.FIcomparray[execute.i] == 4) { execute.CMPsFI=false; execute.pipelineRegisters=false; execute.FUsFI=true; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i];execute.FItarget=execute.FItarArr[execute.i]; }
+if (execute.FIcomparray[execute.i] == 5) { execute.CMPsFI=true;  execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i]; execute.FItarget=execute.FItarArr[execute.i]; }
 				DPRINTF(RegPointerFI, "%s: Idx(%s), points to F: %s\nBecause of faults in pipeline registers now it points to %s\n", inst->staticInst->disassemble(0), reg_idx, static_cast<unsigned int>(reg_idx), static_cast<unsigned int>(faultyIDX));
 									return thread.readFloatReg(faultyIDX);
 
@@ -299,10 +310,11 @@ if (execute.FIcomparray[execute.i] == 4) { execute.pipelineRegisters=false; exec
 								srand (curTick()+time(0));
 								execute.faultIsInjected[execute.i]=true;
 								execute.i = execute.i + 1;
-if (execute.FIcomparray[execute.i] == 1) { execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=100; execute.FItarget=execute.FItarArr[execute.i]; }
-if (execute.FIcomparray[execute.i] == 2) { execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=true; execute.FItargetReg=execute.FIRegArr[execute.i]; execute.FItarget=execute.FItarArr[execute.i]; }
-if (execute.FIcomparray[execute.i] == 3) { execute.pipelineRegisters=true; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i];execute.FItarget=execute.FItarArr[execute.i]; }
-if (execute.FIcomparray[execute.i] == 4) { execute.pipelineRegisters=false; execute.FUsFI=true; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i];execute.FItarget=execute.FItarArr[execute.i]; }
+if (execute.FIcomparray[execute.i] == 1) { execute.CMPsFI=false; execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=100; execute.FItarget=execute.FItarArr[execute.i]; }
+if (execute.FIcomparray[execute.i] == 2) { execute.CMPsFI=false; execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=true; execute.FItargetReg=execute.FIRegArr[execute.i]; execute.FItarget=execute.FItarArr[execute.i]; }
+if (execute.FIcomparray[execute.i] == 3) { execute.CMPsFI=false; execute.pipelineRegisters=true; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i];execute.FItarget=execute.FItarArr[execute.i]; }
+if (execute.FIcomparray[execute.i] == 4) { execute.CMPsFI=false; execute.pipelineRegisters=false; execute.FUsFI=true; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i];execute.FItarget=execute.FItarArr[execute.i]; }
+if (execute.FIcomparray[execute.i] == 5) { execute.CMPsFI=true;  execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i]; execute.FItarget=execute.FItarArr[execute.i]; }
 								return thread.readFloatReg(reg_idx);
 								}
 								else
@@ -313,10 +325,11 @@ if (execute.FIcomparray[execute.i] == 4) { execute.pipelineRegisters=false; exec
 			DPRINTF(FUsREGfaultInjectionTrack, ANSI_COLOR_BLUE "----FU FI--FAULT ID=%d----@ clk tick=%s with Seq Num=%s" ANSI_COLOR_RESET "\n", execute.i,curTick(),inst->id.execSeqNum);
 						execute.faultIsInjected[execute.i]=true;
 						execute.i = execute.i + 1;
-if (execute.FIcomparray[execute.i] == 1) { execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=100; execute.FItarget=execute.FItarArr[execute.i]; }
-if (execute.FIcomparray[execute.i] == 2) { execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=true; execute.FItargetReg=execute.FIRegArr[execute.i]; execute.FItarget=execute.FItarArr[execute.i]; }
-if (execute.FIcomparray[execute.i] == 3) { execute.pipelineRegisters=true; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i];execute.FItarget=execute.FItarArr[execute.i]; }
-if (execute.FIcomparray[execute.i] == 4) { execute.pipelineRegisters=false; execute.FUsFI=true; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i];execute.FItarget=execute.FItarArr[execute.i]; }
+if (execute.FIcomparray[execute.i] == 1) { execute.CMPsFI=false; execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=100; execute.FItarget=execute.FItarArr[execute.i]; }
+if (execute.FIcomparray[execute.i] == 2) { execute.CMPsFI=false; execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=true; execute.FItargetReg=execute.FIRegArr[execute.i]; execute.FItarget=execute.FItarArr[execute.i]; }
+if (execute.FIcomparray[execute.i] == 3) { execute.CMPsFI=false; execute.pipelineRegisters=true; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i];execute.FItarget=execute.FItarArr[execute.i]; }
+if (execute.FIcomparray[execute.i] == 4) { execute.CMPsFI=false; execute.pipelineRegisters=false; execute.FUsFI=true; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i];execute.FItarget=execute.FItarArr[execute.i]; }
+if (execute.FIcomparray[execute.i] == 5) { execute.CMPsFI=true;  execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i]; execute.FItarget=execute.FItarArr[execute.i]; }
 						int faultyval = int(thread.readFloatReg(reg_idx)) xor temp; 
 if (faultyval < 0) faultyval= -faultyval;
 						DPRINTF(FUsREGfaultInjectionTrack, "%s: " ANSI_COLOR_GREEN "TRUE FU's VALUE" ANSI_COLOR_RESET " was: %s\nDue to the faults in FU's registers the " ANSI_COLOR_RED "FAULTY FU's VALUE " ANSI_COLOR_RESET " is %s\n", inst->staticInst->disassemble(0), thread.readFloatReg(reg_idx), faultyval);
@@ -351,10 +364,11 @@ if (faultyval < 0) faultyval= -faultyval;
 								srand (curTick()+time(0));
 								execute.faultIsInjected[execute.i]=true;
 								execute.i = execute.i + 1;
-if (execute.FIcomparray[execute.i] == 1) { execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=100; execute.FItarget=execute.FItarArr[execute.i]; }
-if (execute.FIcomparray[execute.i] == 2) { execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=true; execute.FItargetReg=execute.FIRegArr[execute.i]; execute.FItarget=execute.FItarArr[execute.i]; }
-if (execute.FIcomparray[execute.i] == 3) { execute.pipelineRegisters=true; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i];execute.FItarget=execute.FItarArr[execute.i]; }
-if (execute.FIcomparray[execute.i] == 4) { execute.pipelineRegisters=false; execute.FUsFI=true; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i];execute.FItarget=execute.FItarArr[execute.i]; }
+if (execute.FIcomparray[execute.i] == 1) { execute.CMPsFI=false; execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=100; execute.FItarget=execute.FItarArr[execute.i]; }
+if (execute.FIcomparray[execute.i] == 2) { execute.CMPsFI=false; execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=true; execute.FItargetReg=execute.FIRegArr[execute.i]; execute.FItarget=execute.FItarArr[execute.i]; }
+if (execute.FIcomparray[execute.i] == 3) { execute.CMPsFI=false; execute.pipelineRegisters=true; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i];execute.FItarget=execute.FItarArr[execute.i]; }
+if (execute.FIcomparray[execute.i] == 4) { execute.CMPsFI=false; execute.pipelineRegisters=false; execute.FUsFI=true; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i];execute.FItarget=execute.FItarArr[execute.i]; }
+if (execute.FIcomparray[execute.i] == 5) { execute.CMPsFI=true;  execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i]; execute.FItarget=execute.FItarArr[execute.i]; }
 								return thread.readFloatRegBits(reg_idx);
 								}
 								else
@@ -365,10 +379,11 @@ if (execute.FIcomparray[execute.i] == 4) { execute.pipelineRegisters=false; exec
 									//temp = pow (2, randBit);
 									execute.faultIsInjected[execute.i]=true;
 									execute.i = execute.i + 1;	
-if (execute.FIcomparray[execute.i] == 1) { execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=100; execute.FItarget=execute.FItarArr[execute.i]; }
-if (execute.FIcomparray[execute.i] == 2) { execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=true; execute.FItargetReg=execute.FIRegArr[execute.i]; execute.FItarget=execute.FItarArr[execute.i]; }
-if (execute.FIcomparray[execute.i] == 3) { execute.pipelineRegisters=true; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i];execute.FItarget=execute.FItarArr[execute.i]; }
-if (execute.FIcomparray[execute.i] == 4) { execute.pipelineRegisters=false; execute.FUsFI=true; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i];execute.FItarget=execute.FItarArr[execute.i]; }
+if (execute.FIcomparray[execute.i] == 1) { execute.CMPsFI=false; execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=100; execute.FItarget=execute.FItarArr[execute.i]; }
+if (execute.FIcomparray[execute.i] == 2) { execute.CMPsFI=false; execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=true; execute.FItargetReg=execute.FIRegArr[execute.i]; execute.FItarget=execute.FItarArr[execute.i]; }
+if (execute.FIcomparray[execute.i] == 3) { execute.CMPsFI=false; execute.pipelineRegisters=true; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i];execute.FItarget=execute.FItarArr[execute.i]; }
+if (execute.FIcomparray[execute.i] == 4) { execute.CMPsFI=false; execute.pipelineRegisters=false; execute.FUsFI=true; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i];execute.FItarget=execute.FItarArr[execute.i]; }
+if (execute.FIcomparray[execute.i] == 5) { execute.CMPsFI=true;  execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i]; execute.FItarget=execute.FItarArr[execute.i]; }
 				DPRINTF(RegPointerFI, ANSI_COLOR_BLUE "----PIPELINE FI--FAULT ID=%d----@ clk tick=%s with Seq Num=%s" ANSI_COLOR_RESET "\n", execute.i,curTick(),inst->id.execSeqNum);
 				DPRINTF(RegPointerFI, "%s: Idx(%s), points to F: %s\nBecause of faults in pipeline registers now it points to %s\n", inst->staticInst->disassemble(0), reg_idx, static_cast<unsigned int>(reg_idx), static_cast<unsigned int>(faultyIDX));
 									return thread.readFloatRegBits(faultyIDX);
@@ -386,10 +401,11 @@ if (execute.FIcomparray[execute.i] == 4) { execute.pipelineRegisters=false; exec
 								srand (curTick()+time(0));
 								execute.faultIsInjected[execute.i]=true;
 								execute.i = execute.i + 1;
-if (execute.FIcomparray[execute.i] == 1) { execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=100; execute.FItarget=execute.FItarArr[execute.i]; }
-if (execute.FIcomparray[execute.i] == 2) { execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=true; execute.FItargetReg=execute.FIRegArr[execute.i]; execute.FItarget=execute.FItarArr[execute.i]; }
-if (execute.FIcomparray[execute.i] == 3) { execute.pipelineRegisters=true; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i];execute.FItarget=execute.FItarArr[execute.i]; }
-if (execute.FIcomparray[execute.i] == 4) { execute.pipelineRegisters=false; execute.FUsFI=true; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i];execute.FItarget=execute.FItarArr[execute.i]; }
+if (execute.FIcomparray[execute.i] == 1) { execute.CMPsFI=false; execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=100; execute.FItarget=execute.FItarArr[execute.i]; }
+if (execute.FIcomparray[execute.i] == 2) { execute.CMPsFI=false; execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=true; execute.FItargetReg=execute.FIRegArr[execute.i]; execute.FItarget=execute.FItarArr[execute.i]; }
+if (execute.FIcomparray[execute.i] == 3) { execute.CMPsFI=false; execute.pipelineRegisters=true; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i];execute.FItarget=execute.FItarArr[execute.i]; }
+if (execute.FIcomparray[execute.i] == 4) { execute.CMPsFI=false; execute.pipelineRegisters=false; execute.FUsFI=true; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i];execute.FItarget=execute.FItarArr[execute.i]; }
+if (execute.FIcomparray[execute.i] == 5) { execute.CMPsFI=true;  execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i]; execute.FItarget=execute.FItarArr[execute.i]; }
 								return thread.readFloatRegBits(reg_idx);
 								}
 								else
@@ -400,10 +416,11 @@ if (execute.FIcomparray[execute.i] == 4) { execute.pipelineRegisters=false; exec
 								DPRINTF(FUsREGfaultInjectionTrack, ANSI_COLOR_BLUE "----FU FI--FAULT ID=%d----@ clk tick=%s with Seq Num=%s" ANSI_COLOR_RESET "\n", execute.i,curTick(),inst->id.execSeqNum);
 								execute.faultIsInjected[execute.i]=true;
 								execute.i = execute.i + 1;
-if (execute.FIcomparray[execute.i] == 1) { execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=100; execute.FItarget=execute.FItarArr[execute.i]; }
-if (execute.FIcomparray[execute.i] == 2) { execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=true; execute.FItargetReg=execute.FIRegArr[execute.i]; execute.FItarget=execute.FItarArr[execute.i]; }
-if (execute.FIcomparray[execute.i] == 3) { execute.pipelineRegisters=true; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i];execute.FItarget=execute.FItarArr[execute.i]; }
-if (execute.FIcomparray[execute.i] == 4) { execute.pipelineRegisters=false; execute.FUsFI=true; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i];execute.FItarget=execute.FItarArr[execute.i]; }
+if (execute.FIcomparray[execute.i] == 1) { execute.CMPsFI=false; execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=100; execute.FItarget=execute.FItarArr[execute.i]; }
+if (execute.FIcomparray[execute.i] == 2) { execute.CMPsFI=false; execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=true; execute.FItargetReg=execute.FIRegArr[execute.i]; execute.FItarget=execute.FItarArr[execute.i]; }
+if (execute.FIcomparray[execute.i] == 3) { execute.CMPsFI=false; execute.pipelineRegisters=true; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i];execute.FItarget=execute.FItarArr[execute.i]; }
+if (execute.FIcomparray[execute.i] == 4) { execute.CMPsFI=false; execute.pipelineRegisters=false; execute.FUsFI=true; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i];execute.FItarget=execute.FItarArr[execute.i]; }
+if (execute.FIcomparray[execute.i] == 5) { execute.CMPsFI=true;  execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i]; execute.FItarget=execute.FItarArr[execute.i]; }
 						int faultyval = int(thread.readFloatRegBits(reg_idx)) xor temp; 
 if (faultyval < 0) faultyval= -faultyval;
 						DPRINTF(FUsREGfaultInjectionTrack, "%s: " ANSI_COLOR_GREEN "TRUE FU's VALUE" ANSI_COLOR_RESET " was: %s\nDue to the faults in FU's registers the " ANSI_COLOR_RED "FAULTY FU's VALUE " ANSI_COLOR_RESET " is %s\n", inst->staticInst->disassemble(0), thread.readFloatRegBits(reg_idx), faultyval);
@@ -441,10 +458,11 @@ return faultyval;
 				DPRINTF(RegPointerFI, ANSI_COLOR_BLUE "----PIPELINE FI--FAULT ID=%d----@ clk tick=%s with Seq Num=%s" ANSI_COLOR_RESET "\n", execute.i,curTick(),inst->id.execSeqNum);
 									execute.faultIsInjected[execute.i]=true;
 									execute.i = execute.i + 1;
-if (execute.FIcomparray[execute.i] == 1) { execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=100; execute.FItarget=execute.FItarArr[execute.i]; }
-if (execute.FIcomparray[execute.i] == 2) { execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=true; execute.FItargetReg=execute.FIRegArr[execute.i]; execute.FItarget=execute.FItarArr[execute.i]; }
-if (execute.FIcomparray[execute.i] == 3) { execute.pipelineRegisters=true; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i];execute.FItarget=execute.FItarArr[execute.i]; }
-if (execute.FIcomparray[execute.i] == 4) { execute.pipelineRegisters=false; execute.FUsFI=true; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i];execute.FItarget=execute.FItarArr[execute.i]; }
+if (execute.FIcomparray[execute.i] == 1) { execute.CMPsFI=false; execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=100; execute.FItarget=execute.FItarArr[execute.i]; }
+if (execute.FIcomparray[execute.i] == 2) { execute.CMPsFI=false; execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=true; execute.FItargetReg=execute.FIRegArr[execute.i]; execute.FItarget=execute.FItarArr[execute.i]; }
+if (execute.FIcomparray[execute.i] == 3) { execute.CMPsFI=false; execute.pipelineRegisters=true; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i];execute.FItarget=execute.FItarArr[execute.i]; }
+if (execute.FIcomparray[execute.i] == 4) { execute.CMPsFI=false; execute.pipelineRegisters=false; execute.FUsFI=true; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i];execute.FItarget=execute.FItarArr[execute.i]; }
+if (execute.FIcomparray[execute.i] == 5) { execute.CMPsFI=true;  execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i]; execute.FItarget=execute.FItarArr[execute.i]; }
 									DPRINTF(RegPointerFI, "%s: Idx(%s), points to I: %s\nBecause of faults in pipeline registers now it points to %s\n", inst->staticInst->disassemble(0), idx, static_cast<unsigned int>(si->destRegIdx(idx)), static_cast<unsigned int>(faultyIDX));
 									thread.setIntReg(faultyIDX, val);
 									return;
@@ -466,10 +484,11 @@ if (execute.FIcomparray[execute.i] == 4) { execute.pipelineRegisters=false; exec
                            DPRINTF(FUsREGfaultInjectionTrack, ANSI_COLOR_BLUE "----FU FI--FAULT ID=%d----@ clk tick=%s with Seq Num=%s" ANSI_COLOR_RESET "\n", execute.i,curTick(),inst->id.execSeqNum);
 									execute.faultIsInjected[execute.i]=true;
 									execute.i = execute.i + 1;
-if (execute.FIcomparray[execute.i] == 1) { execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=100; execute.FItarget=execute.FItarArr[execute.i]; }
-if (execute.FIcomparray[execute.i] == 2) { execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=true; execute.FItargetReg=execute.FIRegArr[execute.i]; execute.FItarget=execute.FItarArr[execute.i]; }
-if (execute.FIcomparray[execute.i] == 3) { execute.pipelineRegisters=true; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i];execute.FItarget=execute.FItarArr[execute.i]; }
-if (execute.FIcomparray[execute.i] == 4) { execute.pipelineRegisters=false; execute.FUsFI=true; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i];execute.FItarget=execute.FItarArr[execute.i]; }
+if (execute.FIcomparray[execute.i] == 1) { execute.CMPsFI=false; execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=100; execute.FItarget=execute.FItarArr[execute.i]; }
+if (execute.FIcomparray[execute.i] == 2) { execute.CMPsFI=false; execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=true; execute.FItargetReg=execute.FIRegArr[execute.i]; execute.FItarget=execute.FItarArr[execute.i]; }
+if (execute.FIcomparray[execute.i] == 3) { execute.CMPsFI=false; execute.pipelineRegisters=true; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i];execute.FItarget=execute.FItarArr[execute.i]; }
+if (execute.FIcomparray[execute.i] == 4) { execute.CMPsFI=false; execute.pipelineRegisters=false; execute.FUsFI=true; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i];execute.FItarget=execute.FItarArr[execute.i]; }
+if (execute.FIcomparray[execute.i] == 5) { execute.CMPsFI=true;  execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i]; execute.FItarget=execute.FItarArr[execute.i]; }
 									int faultyval = val xor temp; 
 if (faultyval < 0) faultyval= -faultyval;
 DPRINTF(FUsREGfaultInjectionTrack, "%s: " ANSI_COLOR_GREEN "TRUE FU's VALUE" ANSI_COLOR_RESET " was: %s\nDue to the faults in FU's registers the " ANSI_COLOR_RED "FAULTY FU's VALUE " ANSI_COLOR_RESET " is %s\n", inst->staticInst->disassemble(0), val, faultyval);
@@ -508,10 +527,11 @@ DPRINTF(FUsREGfaultInjectionTrack, "%s: " ANSI_COLOR_GREEN "TRUE FU's VALUE" ANS
 								srand (curTick()+time(0));
 								execute.faultIsInjected[execute.i]=true;
 								execute.i = execute.i + 1;
-if (execute.FIcomparray[execute.i] == 1) { execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=100; execute.FItarget=execute.FItarArr[execute.i]; }
-if (execute.FIcomparray[execute.i] == 2) { execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=true; execute.FItargetReg=execute.FIRegArr[execute.i]; execute.FItarget=execute.FItarArr[execute.i]; }
-if (execute.FIcomparray[execute.i] == 3) { execute.pipelineRegisters=true; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i];execute.FItarget=execute.FItarArr[execute.i]; }
-if (execute.FIcomparray[execute.i] == 4) { execute.pipelineRegisters=false; execute.FUsFI=true; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i];execute.FItarget=execute.FItarArr[execute.i]; }
+if (execute.FIcomparray[execute.i] == 1) { execute.CMPsFI=false; execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=100; execute.FItarget=execute.FItarArr[execute.i]; }
+if (execute.FIcomparray[execute.i] == 2) { execute.CMPsFI=false; execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=true; execute.FItargetReg=execute.FIRegArr[execute.i]; execute.FItarget=execute.FItarArr[execute.i]; }
+if (execute.FIcomparray[execute.i] == 3) { execute.CMPsFI=false; execute.pipelineRegisters=true; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i];execute.FItarget=execute.FItarArr[execute.i]; }
+if (execute.FIcomparray[execute.i] == 4) { execute.CMPsFI=false; execute.pipelineRegisters=false; execute.FUsFI=true; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i];execute.FItarget=execute.FItarArr[execute.i]; }
+if (execute.FIcomparray[execute.i] == 5) { execute.CMPsFI=true;  execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i]; execute.FItarget=execute.FItarArr[execute.i]; }
 								thread.setFloatReg(reg_idx, val);
 								}
 								else
@@ -524,10 +544,11 @@ if (execute.FIcomparray[execute.i] == 4) { execute.pipelineRegisters=false; exec
 				DPRINTF(RegPointerFI, ANSI_COLOR_BLUE "----PIPELINE FI--FAULT ID=%d----@ clk tick=%s with Seq Num=%s" ANSI_COLOR_RESET "\n", execute.i,curTick(),inst->id.execSeqNum);
 									execute.faultIsInjected[execute.i]=true;
 									execute.i = execute.i + 1;
-if (execute.FIcomparray[execute.i] == 1) { execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=100; execute.FItarget=execute.FItarArr[execute.i]; }
-if (execute.FIcomparray[execute.i] == 2) { execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=true; execute.FItargetReg=execute.FIRegArr[execute.i]; execute.FItarget=execute.FItarArr[execute.i]; }
-if (execute.FIcomparray[execute.i] == 3) { execute.pipelineRegisters=true; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i];execute.FItarget=execute.FItarArr[execute.i]; }
-if (execute.FIcomparray[execute.i] == 4) { execute.pipelineRegisters=false; execute.FUsFI=true; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i];execute.FItarget=execute.FItarArr[execute.i]; }
+if (execute.FIcomparray[execute.i] == 1) { execute.CMPsFI=false; execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=100; execute.FItarget=execute.FItarArr[execute.i]; }
+if (execute.FIcomparray[execute.i] == 2) { execute.CMPsFI=false; execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=true; execute.FItargetReg=execute.FIRegArr[execute.i]; execute.FItarget=execute.FItarArr[execute.i]; }
+if (execute.FIcomparray[execute.i] == 3) { execute.CMPsFI=false; execute.pipelineRegisters=true; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i];execute.FItarget=execute.FItarArr[execute.i]; }
+if (execute.FIcomparray[execute.i] == 4) { execute.CMPsFI=false; execute.pipelineRegisters=false; execute.FUsFI=true; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i];execute.FItarget=execute.FItarArr[execute.i]; }
+if (execute.FIcomparray[execute.i] == 5) { execute.CMPsFI=true;  execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i]; execute.FItarget=execute.FItarArr[execute.i]; }
 									DPRINTF(RegPointerFI, "%s: Idx(%s), points to F: %s\nBecause of faults in pipeline registers now it points to %s\n", inst->staticInst->disassemble(0), idx, static_cast<unsigned int>(reg_idx), static_cast<unsigned int>(faultyIDX));
 									thread.setFloatReg(faultyIDX, val);
 									return;
@@ -581,10 +602,11 @@ if (execute.FIcomparray[execute.i] == 4) { execute.pipelineRegisters=false; exec
 								srand (curTick()+time(0));
 								execute.faultIsInjected[execute.i]=true;
 								execute.i = execute.i + 1;
-if (execute.FIcomparray[execute.i] == 1) { execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=100; execute.FItarget=execute.FItarArr[execute.i]; }
-if (execute.FIcomparray[execute.i] == 2) { execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=true; execute.FItargetReg=execute.FIRegArr[execute.i]; execute.FItarget=execute.FItarArr[execute.i]; }
-if (execute.FIcomparray[execute.i] == 3) { execute.pipelineRegisters=true; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i];execute.FItarget=execute.FItarArr[execute.i]; }
-if (execute.FIcomparray[execute.i] == 4) { execute.pipelineRegisters=false; execute.FUsFI=true; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i];execute.FItarget=execute.FItarArr[execute.i]; }
+if (execute.FIcomparray[execute.i] == 1) { execute.CMPsFI=false; execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=100; execute.FItarget=execute.FItarArr[execute.i]; }
+if (execute.FIcomparray[execute.i] == 2) { execute.CMPsFI=false; execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=true; execute.FItargetReg=execute.FIRegArr[execute.i]; execute.FItarget=execute.FItarArr[execute.i]; }
+if (execute.FIcomparray[execute.i] == 3) { execute.CMPsFI=false; execute.pipelineRegisters=true; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i];execute.FItarget=execute.FItarArr[execute.i]; }
+if (execute.FIcomparray[execute.i] == 4) { execute.CMPsFI=false; execute.pipelineRegisters=false; execute.FUsFI=true; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i];execute.FItarget=execute.FItarArr[execute.i]; }
+if (execute.FIcomparray[execute.i] == 5) { execute.CMPsFI=true;  execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i]; execute.FItarget=execute.FItarArr[execute.i]; }
 								thread.setFloatRegBits(reg_idx, val);
 								}
 								else
@@ -597,10 +619,11 @@ if (execute.FIcomparray[execute.i] == 4) { execute.pipelineRegisters=false; exec
 				DPRINTF(RegPointerFI, ANSI_COLOR_BLUE "----PIPELINE FI--FAULT ID=%d----@ clk tick=%s with Seq Num=%s" ANSI_COLOR_RESET "\n", execute.i,curTick(),inst->id.execSeqNum);
 									execute.faultIsInjected[execute.i]=true;
 									execute.i = execute.i + 1;
-if (execute.FIcomparray[execute.i] == 1) { execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=100; execute.FItarget=execute.FItarArr[execute.i]; }
-if (execute.FIcomparray[execute.i] == 2) { execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=true; execute.FItargetReg=execute.FIRegArr[execute.i]; execute.FItarget=execute.FItarArr[execute.i]; }
-if (execute.FIcomparray[execute.i] == 3) { execute.pipelineRegisters=true; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i];execute.FItarget=execute.FItarArr[execute.i]; }
-if (execute.FIcomparray[execute.i] == 4) { execute.pipelineRegisters=false; execute.FUsFI=true; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i];execute.FItarget=execute.FItarArr[execute.i]; }
+if (execute.FIcomparray[execute.i] == 1) { execute.CMPsFI=false; execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=100; execute.FItarget=execute.FItarArr[execute.i]; }
+if (execute.FIcomparray[execute.i] == 2) { execute.CMPsFI=false; execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=true; execute.FItargetReg=execute.FIRegArr[execute.i]; execute.FItarget=execute.FItarArr[execute.i]; }
+if (execute.FIcomparray[execute.i] == 3) { execute.CMPsFI=false; execute.pipelineRegisters=true; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i];execute.FItarget=execute.FItarArr[execute.i]; }
+if (execute.FIcomparray[execute.i] == 4) { execute.CMPsFI=false; execute.pipelineRegisters=false; execute.FUsFI=true; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i];execute.FItarget=execute.FItarArr[execute.i]; }
+if (execute.FIcomparray[execute.i] == 5) { execute.CMPsFI=true;  execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i]; execute.FItarget=execute.FItarArr[execute.i]; }
 									DPRINTF(RegPointerFI, "%s: Idx(%s), points to F: %s\nBecause of faults in pipeline registers now it points to %s\n", inst->staticInst->disassemble(0), idx, static_cast<unsigned int>(reg_idx), static_cast<unsigned int>(faultyIDX));
 									thread.setFloatRegBits(faultyIDX, val);
 									return;
@@ -616,10 +639,11 @@ if (execute.FIcomparray[execute.i] == 4) { execute.pipelineRegisters=false; exec
 			DPRINTF(FUsREGfaultInjectionTrack, ANSI_COLOR_BLUE "----FU FI--FAULT ID=%d----@ clk tick=%s with Seq Num=%s" ANSI_COLOR_RESET "\n", execute.i,curTick(),inst->id.execSeqNum);
 									execute.faultIsInjected[execute.i]=true;
 									execute.i = execute.i + 1;
-if (execute.FIcomparray[execute.i] == 1) { execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=100; execute.FItarget=execute.FItarArr[execute.i]; }
-if (execute.FIcomparray[execute.i] == 2) { execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=true; execute.FItargetReg=execute.FIRegArr[execute.i]; execute.FItarget=execute.FItarArr[execute.i]; }
-if (execute.FIcomparray[execute.i] == 3) { execute.pipelineRegisters=true; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i];execute.FItarget=execute.FItarArr[execute.i]; }
-if (execute.FIcomparray[execute.i] == 4) { execute.pipelineRegisters=false; execute.FUsFI=true; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i];execute.FItarget=execute.FItarArr[execute.i]; }
+if (execute.FIcomparray[execute.i] == 1) { execute.CMPsFI=false; execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=100; execute.FItarget=execute.FItarArr[execute.i]; }
+if (execute.FIcomparray[execute.i] == 2) { execute.CMPsFI=false; execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=true; execute.FItargetReg=execute.FIRegArr[execute.i]; execute.FItarget=execute.FItarArr[execute.i]; }
+if (execute.FIcomparray[execute.i] == 3) { execute.CMPsFI=false; execute.pipelineRegisters=true; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i];execute.FItarget=execute.FItarArr[execute.i]; }
+if (execute.FIcomparray[execute.i] == 4) { execute.CMPsFI=false; execute.pipelineRegisters=false; execute.FUsFI=true; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i];execute.FItarget=execute.FItarArr[execute.i]; }
+if (execute.FIcomparray[execute.i] == 5) { execute.CMPsFI=true;  execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i]; execute.FItarget=execute.FItarArr[execute.i]; }
  									TheISA::FloatReg faultyval = (long)val xor (long)temp; 
 if (faultyval < 0) faultyval= -faultyval;
 									DPRINTF(FUsREGfaultInjectionTrack, "%s: " ANSI_COLOR_GREEN "TRUE FU's VALUE" ANSI_COLOR_RESET " was: %s\nDue to the faults in FU's registers the " ANSI_COLOR_RED "FAULTY FU's VALUE " ANSI_COLOR_RESET " is %s\n", inst->staticInst->disassemble(0), val, faultyval);

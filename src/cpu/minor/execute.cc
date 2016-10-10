@@ -187,10 +187,11 @@ namespace Minor
 			FIBitArr[k] = std::stol( token );
 			k++;
 			} 		
-		if (FIcomparray[i] == 1) { pipelineRegisters=false; FUsFI=false; LSQFI=false; FItargetReg=100; FItarget=FItarArr[i]; }
-		if (FIcomparray[i] == 2) { pipelineRegisters=false; FUsFI=false; LSQFI=true; FItargetReg=FIRegArr[i]; FItarget=FItarArr[i]; FItargetBit=FIBitArr[i]; }
-		if (FIcomparray[i] == 3) { pipelineRegisters=true; FUsFI=false; LSQFI=false; FItargetReg=FIRegArr[i]; FItarget=FItarArr[i]; FItargetBit=FIBitArr[i]; }
-		if (FIcomparray[i] == 4) { pipelineRegisters=false; FUsFI=true; LSQFI=false; FItargetReg=FIRegArr[i]; FItarget=FItarArr[i]; }
+		if (FIcomparray[i] == 1) { pipelineRegisters=false; FUsFI=false; LSQFI=false; CMPsFI=false; FItargetReg=100; FItarget=FItarArr[i]; }
+		if (FIcomparray[i] == 2) { pipelineRegisters=false; FUsFI=false; LSQFI=true; CMPsFI=false; FItargetReg=FIRegArr[i]; FItarget=FItarArr[i]; FItargetBit=FIBitArr[i]; }
+		if (FIcomparray[i] == 3) { pipelineRegisters=true; FUsFI=false; LSQFI=false; CMPsFI=false; FItargetReg=FIRegArr[i]; FItarget=FItarArr[i]; FItargetBit=FIBitArr[i]; }
+		if (FIcomparray[i] == 4) { pipelineRegisters=false; FUsFI=true; LSQFI=false; CMPsFI=false; FItargetReg=FIRegArr[i]; FItarget=FItarArr[i]; FItargetBit=FIBitArr[i]; }
+		if (FIcomparray[i] == 5) { CMPsFI=true; pipelineRegisters = FUsFI = LSQFI = false; FItargetReg=FIRegArr[i]; FItarget=FItarArr[i]; FItargetBit=FIBitArr[i]; }
 		
 
 		/* This should be large enough to count all the in-FU instructions
@@ -349,7 +350,7 @@ namespace Minor
 				///eeee
 				//CMP register fault injection SSSS
 
-				if(!test && FItarget == headOfInFlightInst && CMPsFI)
+				if( !test && FItarget == headOfInFlightInst && CMPsFI)
 				{
 					DPRINTF(CMPsREGfaultInjectionTrack, "FUNC= %s\nTarget instruction for CMP fault injection is %s\n",funcName, inst->staticInst->disassemble(0));
 					test=true;
@@ -2126,10 +2127,11 @@ DPRINTF(faultInjectionTrack, "%s \n",inst->staticInst->disassemble(0));
 
 						faultIsInjected[i]=true;
 						i = i + 1;
-		if (FIcomparray[i] == 1) { pipelineRegisters=false; FUsFI=false; LSQFI=false; FItargetReg=rand()%(NUM_INTREGS); FItarget=FItarArr[i]; }
-		if (FIcomparray[i] == 2) { pipelineRegisters=false; FUsFI=false; LSQFI=true; FItargetReg=FIRegArr[i]; FItarget=FItarArr[i]; FItargetBit=FIBitArr[i]; }
-		if (FIcomparray[i] == 3) { pipelineRegisters=true; FUsFI=false; LSQFI=false; FItargetReg=FIRegArr[i]; FItarget=FItarArr[i]; }
-		if (FIcomparray[i] == 4) { pipelineRegisters=false; FUsFI=true; LSQFI=false; FItargetReg=FIRegArr[i]; FItarget=FItarArr[i]; }
+		if (FIcomparray[i] == 1) { pipelineRegisters=false; FUsFI=false; LSQFI=false; CMPsFI=false; FItargetReg=rand()%(NUM_INTREGS); FItarget=FItarArr[i]; }
+		if (FIcomparray[i] == 2) { pipelineRegisters=false; FUsFI=false; LSQFI=true; CMPsFI=false; FItargetReg=FIRegArr[i]; FItarget=FItarArr[i]; FItargetBit=FIBitArr[i]; }
+		if (FIcomparray[i] == 3) { pipelineRegisters=true; FUsFI=false; LSQFI=false; CMPsFI=false; FItargetReg=FIRegArr[i]; FItarget=FItarArr[i]; FItargetBit=FIBitArr[i]; }
+		if (FIcomparray[i] == 4) { pipelineRegisters=false; FUsFI=true; LSQFI=false; CMPsFI=false; FItargetReg=FIRegArr[i]; FItarget=FItarArr[i]; FItargetBit=FIBitArr[i]; }
+		if (FIcomparray[i] == 5) { CMPsFI=true; pipelineRegisters = FUsFI = LSQFI = false; FItargetReg=FIRegArr[i]; FItarget=FItarArr[i]; FItargetBit=FIBitArr[i]; }
 
 					//1)select a random register
 
