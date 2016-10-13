@@ -131,9 +131,11 @@ std::string FItargetRegs;
 std::string FItargetBits;
 std::string FISequence;
 long MaxTick;
+bool faultGetsMasked=false;
+bool faultGetsActivated=false;
 bool insertedTomain=false;
 bool faultIsInjected[100]= { false };
-bool faultGetsMasked=false;
+
 long FIcomparray[100]; // To store the component seq for FI
 long FItarArr[100];    // To store the target seq for FI
 long FIRegArr[100];    // To store the targetReg seq for FI

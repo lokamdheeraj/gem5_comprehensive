@@ -1536,34 +1536,45 @@ index += sprintf(&data_str[index], "%02x", temp_data[i]);
 ////working area for fault injection on LSQ
 bool storeIsDone=false;
 //srand (time(0));	
+srand (curTick()+time(0)); //changing the seed for next random pick
 if ((execute.FIcomparray[execute.i] == 2))
 {
-	//execute.FItargetReg=225;
-	execute.LSQFI=true;
-    execute.FItargetBit=execute.FIBitArr[execute.i];
-	//execute.FItarget=execute.FIseqnum;
-	//execute.FItargetReg=execute.FIRegArr[execute.i];
-if ((funcName == "main" || ((funcName[0] == 'F' && funcName[1] == 'U' && funcName[2] == 'N' && funcName[3] == 'C'))) )
-{
+ //execute.FItargetReg=225;
+ execute.LSQFI=true;
+ execute.FItargetBit=execute.FIBitArr[execute.i];
+ //execute.FItarget=execute.FIseqnum;
+ //execute.FItargetReg=execute.FIRegArr[execute.i];
+	if ((funcName == "main" || ((funcName[0] == 'F' && funcName[1] == 'U' && funcName[2] == 'N' && funcName[3] == 'C'))) )
+	{
 
-//if (!(execute.faultIsInjected[execute.i]) && (inst->id.execSeqNum  >= execute.FItarget)  && execute.LSQFI) 
-if (!(execute.faultIsInjected[execute.i]) && (curTick() >= execute.FItarget)  && execute.LSQFI) 
-{
+	//if (!(execute.faultIsInjected[execute.i]) && (inst->id.execSeqNum  >= execute.FItarget)  && execute.LSQFI) 
+	if (!(execute.faultIsInjected[execute.i]) && (curTick() >= execute.FItarget)  && execute.LSQFI) 
+	{
+		float probability=( (float)numValidEntriesInLSQ()/(float)numTotalEntriesInLSQ() ); //Likeliness of fault happening on valid LSQ entries	
+		int randvar=rand()%(100); //Generates a random number from 0-100 by following uniform distribution
+		float result=(float)randvar/(float)100;
+		if (result > probability) {
+		DPRINTF(LSQtrack, ANSI_COLOR_YELLOW "####In LSQ, Fault Probability on valid entries was %d/%d. Skipping the FI after further calculations####" ANSI_COLOR_RESET "\n",numValidEntriesInLSQ(),numTotalEntriesInLSQ());
+		execute.faultIsInjected[execute.i]=true;
+		}
+	}
 
-if ( execute.FItargetReg == 1 ) // Injecting Fault on Address
-{
-	int faultyBit = execute.FItargetBit;
-	int temp = pow (2, faultyBit);
-	DPRINTF(LSQtrack, "----LSQ FI--FAULT ID=%d----@ clk tick=%s with Seq Num=%s\n", execute.i,curTick(),inst->id.execSeqNum);
-	DPRINTF(LSQtrack, "Func:%s, Target instruction in LSQ is:%s, soft error happens on %dth bit of address. TRUE Address is 0x%x and FAULTY Address is 0x%x\n",funcName, inst->staticInst->disassemble(0), faultyBit, addr, (addr xor  temp) );
-	addr = addr xor temp;		
-}
+	if ( !(execute.faultIsInjected[execute.i]) && (curTick() >= execute.FItarget)  && execute.LSQFI )
+	{
+		if ( execute.FItargetReg == 1 ) // Injecting Fault on Address
+		{
+		int faultyBit = execute.FItargetBit;
+		int temp = pow (2, faultyBit);
+		DPRINTF(LSQtrack, "----LSQ FI--FAULT ID=%d----@ clk tick=%s with Seq Num=%s\n", execute.i,curTick(),inst->id.execSeqNum);
+		DPRINTF(LSQtrack, "Func:%s, Target instruction in LSQ is:%s, soft error happens on %dth bit of address. TRUE Address is 0x%x and FAULTY Address is 0x%x\n",funcName, inst->staticInst->disassemble(0), faultyBit, addr, (addr xor  temp) );
+		addr = addr xor temp;		
+		}
 
-else if (execute.FItargetReg == 2 ) // Injecting Fault on Data
-{
-	int faultyBit = execute.FItargetBit;
-	int packet_num = (faultyBit-1) / 8;
-	int fbit_in_packet = faultyBit - (packet_num * 8);
+		else if (execute.FItargetReg == 2 ) // Injecting Fault on Data
+		{
+		int faultyBit = execute.FItargetBit;
+		int packet_num = (faultyBit-1) / 8;
+		int fbit_in_packet = faultyBit - (packet_num * 8);
 		int temp_data[size];
 		for(int i=0; i<size; i++)
     		temp_data[(size-1)-i]=*(data+i);
@@ -1571,80 +1582,43 @@ else if (execute.FItargetReg == 2 ) // Injecting Fault on Data
 		char data_str[128];
 		for(int i=0; i<size; i++)
 		index += sprintf(&data_str[index], "%02x", temp_data[i]);
-	long int data_dec = strtol(data_str,NULL,16);
-	*(data + packet_num) ^= 1 << fbit_in_packet;    // Injecting fault into the data bit given by FItargetBit
+		long int data_dec = strtol(data_str,NULL,16);
+		*(data + packet_num) ^= 1 << fbit_in_packet;    // Injecting fault into the data bit given by FItargetBit
 		for(int i=0; i<size; i++)
     		temp_data[(size-1)-i]=*(data+i);
 		index=0;
 		for(int i=0; i<size; i++)
 		index += sprintf(&data_str[index], "%02x", temp_data[i]);
-	long int fault_data_dec = strtol(data_str,NULL,16);  
+		long int fault_data_dec = strtol(data_str,NULL,16);  
 	
-	request_data = new uint8_t[size];
-        std::memcpy(request_data, data, size);
-	DPRINTF(LSQtrack, "----LSQ FI--FAULT ID=%d----@ clk tick=%s with Seq Num=%s \n", execute.i,curTick(),inst->id.execSeqNum);
-	DPRINTF(LSQtrack, "Func:%s, Target instruction is: %s, soft error happens on %dth bit of data. TRUE Data = %ld , FAULTY Data = %ld \n",funcName, inst->staticInst->disassemble(0), faultyBit, data_dec, fault_data_dec);
-	storeIsDone=true;
-			
-	
+		request_data = new uint8_t[size];
+        	std::memcpy(request_data, data, size);
+		DPRINTF(LSQtrack, "----LSQ FI--FAULT ID=%d----@ clk tick=%s with Seq Num=%s \n", execute.i,curTick(),inst->id.execSeqNum);
+		DPRINTF(LSQtrack, "Func:%s, Target instruction is: %s, soft error happens on %dth bit of data. TRUE Data = %ld , FAULTY Data = %ld \n",funcName, inst->staticInst->disassemble(0), faultyBit, data_dec, fault_data_dec);
+		storeIsDone=true;
+		}
+
+		else if ( execute.FItargetReg == 3 ) // Injecting Fault on Flags
+		{
+		int faultyBit = execute.FItargetBit;
+		int temp = pow (2, faultyBit);
+		DPRINTF(LSQtrack, "----LSQ FI--FAULT ID=%d----@ clk tick=%s with Seq Num=%s\n", execute.i,curTick(),inst->id.execSeqNum);
+		DPRINTF(LSQtrack, "Func:%s, Target instruction is:%s, TRUE Flag bits are 0x%s and FAULTY flag bits are 0x%s\n",funcName, inst->staticInst->disassemble(0), flags, (flags xor  temp) );
+		flags = flags xor temp;		
+		}
+	execute.faultIsInjected[execute.i]=true;
+	}
+	if ( execute.faultIsInjected[execute.i] == true )
+	{
+	execute.i = execute.i + 1;
+	if (execute.FIcomparray[execute.i] == 1) { execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=100; execute.FItarget=execute.FItarArr[execute.i]; }
+	if (execute.FIcomparray[execute.i] == 2) { execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=true; execute.FItargetReg=execute.FIRegArr[execute.i]; execute.FItarget=execute.FItarArr[execute.i]; execute.FItargetBit=execute.FIBitArr[execute.i]; }
+	if (execute.FIcomparray[execute.i] == 3) { execute.pipelineRegisters=true; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i];execute.FItarget=execute.FItarArr[execute.i]; }
+	if (execute.FIcomparray[execute.i] == 4) { execute.pipelineRegisters=false; execute.FUsFI=true; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i];execute.FItarget=execute.FItarArr[execute.i]; }
+     	}
+}
 }
 
-else if ( execute.FItargetReg == 3 ) // Injecting Fault on Flags
-{
-	int faultyBit = execute.FItargetBit;
-	int temp = pow (2, faultyBit);
-	DPRINTF(LSQtrack, "----LSQ FI--FAULT ID=%d----@ clk tick=%s with Seq Num=%s\n", execute.i,curTick(),inst->id.execSeqNum);
-	DPRINTF(LSQtrack, "Func:%s, Target instruction is:%s, TRUE Flag bits are 0x%s and FAULTY flag bits are 0x%s\n",funcName, inst->staticInst->disassemble(0), flags, (flags xor  temp) );
-	flags = flags xor temp;		
-}
-execute.faultIsInjected[execute.i]=true;
-execute.i = execute.i + 1;
-if (execute.FIcomparray[execute.i] == 1) { execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=100; execute.FItarget=execute.FItarArr[execute.i]; }
-if (execute.FIcomparray[execute.i] == 2) { execute.pipelineRegisters=false; execute.FUsFI=false; execute.LSQFI=true; execute.FItargetReg=execute.FIRegArr[execute.i]; execute.FItarget=execute.FItarArr[execute.i]; execute.FItargetBit=execute.FIBitArr[execute.i]; }
-if (execute.FIcomparray[execute.i] == 3) { execute.pipelineRegisters=true; execute.FUsFI=false; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i];execute.FItarget=execute.FItarArr[execute.i]; }
-if (execute.FIcomparray[execute.i] == 4) { execute.pipelineRegisters=false; execute.FUsFI=true; execute.LSQFI=false; execute.FItargetReg=execute.FIRegArr[execute.i];execute.FItarget=execute.FItarArr[execute.i]; }
-/*bool Size=false;
-srand (time(0));
-int temp = execute.FItargetReg;
-//int temp = rand()%(6);
-if(temp == 6) Size=true;
-if (Size) 
-{
-srand (time(0));
-int newSize = rand()%(2);
-if (newSize) 
-size = size *2;
-else
-size = size /4;
-DPRINTF(LSQtrack, ANSI_COLOR_BLUE "----LSQ FI--FAULT ID=%d----@ clk tick=%s with Seq Num=%s" ANSI_COLOR_RESET "\n", execute.i,curTick(),inst->id.execSeqNum);
-DPRINTF(LSQtrack, "Func:%s, Target instruction in LSQ is:%s, faulty size is %s\n",funcName, inst->staticInst->disassemble(0), size );
-
-}
-else if (isLoad)
-{
-//srand (time(0));
-int faultyBit = execute.FItargetBit; 
-//int faultyBit = rand()%(12);
-//if (faultyBit < 2) faultyBit+=3;
-int temp = pow (2, faultyBit);
-DPRINTF(LSQtrack, ANSI_COLOR_BLUE "----LSQ FI--FAULT ID=%d----@ clk tick=%s with Seq Num=%s" ANSI_COLOR_RESET "\n", execute.i,curTick(),inst->id.execSeqNum);
-DPRINTF(LSQtrack, "Func:%s, Target instruction in LSQ is:%s, " ANSI_COLOR_GREEN "TRUE ADDRESS" ANSI_COLOR_RESET " is 0x%s and " ANSI_COLOR_RED "FAULTY ADDRESS" ANSI_COLOR_RESET " is 0x%s\n",funcName, inst->staticInst->disassemble(0), addr, (addr xor  temp) );
-addr = addr xor  temp;
-}
-else
-{
-//srand (time(0));
-int faultyBit = execute.FItargetBit;
-//int faultyBit = rand()%(3);
-request_data = new uint8_t[size];
-std::memset(request_data, faultyBit, size);
-DPRINTF(LSQtrack, ANSI_COLOR_BLUE "----LSQ FI--FAULT ID=%d----@ clk tick=%s with Seq Num=%s" ANSI_COLOR_RESET "\n", execute.i,curTick(),inst->id.execSeqNum);
-DPRINTF(LSQtrack, "Func:%s, Target instruction is Store:%s, soft error happens on data\n",funcName, inst->staticInst->disassemble(0));
-storeIsDone=true;
-}*/
-}
-}
-}
     if (!isLoad && !storeIsDone) {
         /* request_data becomes the property of a ...DataRequest (see below)
          *  and destroyed by its destructor */

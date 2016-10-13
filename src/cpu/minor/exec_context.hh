@@ -145,8 +145,26 @@ namespace Minor
 
 			IntReg
 				readIntRegOperand(const StaticInst *si, int idx)
-				{	//regsiter file
-										
+				{	
+
+				//Avoiding Faults on Library Calls
+				std::string funcName="nothing";
+				Addr sym_addr;
+				debugSymbolTable->findNearestSymbol(cpu.getContext(0)->instAddr(), funcName, sym_addr);
+				if ( execute.faultIsInjected[execute.i] && !execute.faultGetsMasked && !execute.faultGetsActivated && execute.FItargetReg == si->srcRegIdx(idx)){
+DPRINTF(faultInjectionTrack, "************Fault is activated**************\nIn function %s, instruction %s is reading register %d: Faulty value is %d\n",funcName, si->disassemble(0), si->srcRegIdx(idx), thread.readIntReg(si->srcRegIdx(idx)));
+				execute.faultGetsActivated=true;
+				if(!((funcName[0] == 'F' &&  funcName[1] == 'U' && funcName[2] == 'N' && funcName[3] == 'C') || (funcName == "main")) ){
+				fatal("%s: ****************FAULT PROPAGATING TO LIBRARY CALL*****************\n",curTick() );
+				}
+				}
+				
+
+
+
+
+//regsiter file
+											
 					if ((execute.FIcomparray[execute.i] == 1) && execute.faultIsInjected[execute.i] && execute.FItargetReg == si->srcRegIdx(idx) && !execute.faultGetsMasked && execute.FItargetRegClass == Execute::regClass::INTEGER)
 					{
 						std::string funcName;
